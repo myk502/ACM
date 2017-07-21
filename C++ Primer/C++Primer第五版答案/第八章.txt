@@ -1,0 +1,210 @@
+#include <cstdlib>      
+#include <iostream>    
+#include <string>  
+using namespace std;  
+  
+  
+istream &f(istream &i)  
+{  
+    string s;  
+    while(i>>s){  
+        cout<<s<<" ";  
+    }  
+    i.clear();  
+    return i;  
+}  
+  
+int main(int argc, char *argv[])    
+{    
+   f(cin);  
+   system("PAUSE");      
+   return 0;      
+}   
+
+8.4
+
+[cpp] view plaincopy在CODE上查看代码片派生到我的代码片
+#include <cstdlib>      
+#include <iostream>    
+#include <fstream>  
+#include <string>  
+#include <vector>  
+using namespace std;  
+  
+int main(int argc, char *argv[])    
+{    
+    vector<string> ss;  
+    string temp;  
+    ifstream in("a.txt", ifstream::in);  
+    if(in){  
+        while(getline(in,temp)){  
+            ss.push_back(temp);  
+        }  
+    }  
+in.close();  
+    for(auto s:ss){  
+        cout<<s<<endl;  
+    }  
+   system("PAUSE");      
+   return 0;      
+}   
+
+8.5
+[cpp] view plaincopy在CODE上查看代码片派生到我的代码片
+#include <cstdlib>      
+#include <iostream>    
+#include <fstream>  
+#include <string>  
+#include <vector>  
+using namespace std;  
+  
+int main(int argc, char *argv[])    
+{    
+    vector<string> ss;  
+    string temp;  
+    ifstream in("a.txt", ifstream::in);  
+    if(in){  
+        while(in>>temp){  
+            ss.push_back(temp);  
+        }  
+    }  
+in.close();  
+    for(auto s:ss){  
+        cout<<s<<endl;  
+    }  
+   system("PAUSE");      
+   return 0;      
+}   
+
+8.9
+
+[cpp] view plaincopy在CODE上查看代码片派生到我的代码片
+#include <cstdlib>        
+#include <iostream>      
+#include <fstream>    
+#include <sstream>  
+#include <string>    
+#include <vector>    
+using namespace std;    
+    
+int main(int argc, char *argv[])      
+{      
+    vector<string> ss;    
+    string temp;    
+    ifstream in("a.txt", ifstream::in);    
+    if(in){    
+        while(getline(in,temp)){    
+            istringstream record(temp);  
+            cout<<record.str()<<endl;  
+            ss.push_back(temp);    
+        }    
+    }    
+    in.close();    
+    /*for(auto s:ss){   
+        cout<<s<<endl;   
+    }*/    
+   system("PAUSE");        
+   return 0;        
+}     
+
+8.10
+[cpp] view plaincopy在CODE上查看代码片派生到我的代码片
+#include <cstdlib>        
+#include <iostream>      
+#include <fstream>    
+#include <sstream>  
+#include <string>    
+#include <vector>    
+using namespace std;    
+    
+int main(int argc, char *argv[])      
+{      
+    vector<string> ss;    
+    string temp;    
+    ifstream in("a.txt", ifstream::in);    
+    if(in){    
+        while(getline(in,temp)){    
+            ss.push_back(temp);    
+        }    
+    }    
+    in.close();    
+    for(auto s:ss){    
+        istringstream record(s);  
+        while(record>>temp){  
+            cout<<temp<<endl;  
+        }  
+    }    
+   system("PAUSE");        
+   return 0;        
+}     
+
+8.13
+[cpp] view plaincopy在CODE上查看代码片派生到我的代码片
+#include <cstdlib>        
+#include <iostream>      
+#include <fstream>    
+#include <sstream>  
+#include <string>    
+#include <vector>    
+using namespace std;    
+    
+struct PersonInfo  
+{  
+    string name;  
+    vector<string> phones;  
+};  
+  
+bool valid(const string &s, string::size_type num = 10)  
+{  
+    return (s.size() == num);  
+};  
+  
+string format(string s)  
+{  
+    return "["+s+"]";  
+};  
+  
+int main(int argc, char *argv[])      
+{      
+   string line, word;  
+   vector<PersonInfo> people;  
+      
+   ifstream in("phone.txt");  
+   if (in)  
+   {  
+       while (getline(in,line))  
+       {  
+           PersonInfo info;  
+  
+           istringstream record(line);  
+           record>>word;  
+           info.name = word;  
+           while(record>>word)  
+           {  
+               info.phones.push_back(word);  
+           }  
+           people.push_back(info);  
+       }  
+   }  
+   //check person info  
+   for (const auto &entry:people)  
+   {  
+       ostringstream formatted, badNums;  
+       for(const auto &num:entry.phones){  
+           if(!valid(num)){  
+               badNums<<" "<<num;  
+           }else{  
+               formatted<<" "<<format(num);  
+           }  
+       }  
+  
+       if(badNums.str().empty())  
+       {  
+           cout<< entry.name << " " << formatted.str() << endl;  
+       }else{  
+           cerr<< "input error: " << entry.name << " " <<" invalid number(s) " << badNums.str() << endl;  
+       }  
+   }  
+   system("PAUSE");        
+   return 0;        
+}    
