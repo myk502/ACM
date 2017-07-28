@@ -1,13 +1,13 @@
 #include<bits/stdc++.h>
 using namespace std;
-
+int x;
 int main(void)
 {
-	list<int> a;
-	auto it=a.end();
-	a.insert(it,5);
-	a.insert(it,3);
-	for(auto i:a)
-		cout<<i<<endl;
+	while(cin>>x)
+	{
+		int temp=32-__builtin_clz(x);
+		cout<<(1<<(temp-1))<<endl;
+	}
+
 	return 0;
 }
