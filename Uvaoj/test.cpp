@@ -1,13 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
-int x;
 int main(void)
 {
-	while(cin>>x)
-	{
-		int temp=32-__builtin_clz(x);
-		cout<<(1<<(temp-1))<<endl;
-	}
-
+	char str[20]="Hello World!";
+	char* ptr=strchr(str,'o');
+	printf("%s\n",ptr);
 	return 0;
 }
