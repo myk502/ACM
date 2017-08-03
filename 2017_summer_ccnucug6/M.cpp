@@ -22,9 +22,9 @@ long long myhash(int id,char* str)
 	int n=strlen(str);
 	for(int i=n-1;i>=0;i--)
 	{
-		long long character=str[i]-'A';
+		long long character=str[i]-'A'+1;
 		ans+=(character*pow)%mod;
-		pow=(pow*58)%mod;
+		pow=(pow*59)%mod;
 	}
 	return ans%mod;
 }
