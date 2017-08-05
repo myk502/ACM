@@ -9,18 +9,22 @@
 using namespace std;
 const int maxn=200000+10;
 int a[maxn],sum[maxn],n,odd_with_ones,odd_without_ones,even_with_ones,even_without_ones;
+string input;
 int main(void)
 {
+	ios::sync_with_stdio(false);
 	long long ans;
 	int T;
 	cin>>T;
 	while(T--)
 	{
+		ans=0;
 		cin>>n;
 		sum[0]=0;
+		cin>>input;
 		for(int i=1;i<=n;i++)
 		{
-			scanf("%d",&a[i]);
+			a[i]=input[i-1]-'0';
 			sum[i]=sum[i-1]^a[i];
 		}
 		odd_with_ones=odd_without_ones=even_with_ones=even_without_ones=0;
@@ -52,9 +56,9 @@ int main(void)
 				}
 			}
 			if(a[i]==a[i+1])
-				odd_without_ones++;
-			else
 				even_without_ones++;
+			else
+				odd_without_ones++;
 			ans+=odd_with_ones;
 		}
 		cout<<ans<<endl;
