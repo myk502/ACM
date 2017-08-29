@@ -82,7 +82,7 @@ int main(void)
 		if(ans)
 		{
 			int temp=-1;
-			for(int i=1;i<26;i++)
+			for(int i=0;i<26;i++)
 			{
 				if(!exist[i])
 					continue;
@@ -93,7 +93,7 @@ int main(void)
 			}
 		}
 		if(!ans)
-			printf("THe door cannot be opened.\n");
+			printf("The door cannot be opened.\n");
 		else
 			printf("Ordering is possible.\n");
 	}

@@ -1,26 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
-
-long long FastMod(int x,int n)
-{
-	 long long pow=x,ans=1;
-	 while(n)
-	 {
-		 if(n&1)
-			ans*=pow;
-		 n>>=1;
-		 pow*=pow;
-	 }
-	 return ans;
-}
-
-
+pair<int,int> a,b;
 int main(void)
 {
-	int a,b;
-	while(cin>>a>>b)
-	{
-		cout<<FastMod(a,b)<<endl;
-	}
+	a=make_pair(2,3);
+	b=make_pair(2,5);
+	cout<<(a==b)<<endl;
 	return 0;
 }
