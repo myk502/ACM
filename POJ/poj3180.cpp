@@ -83,7 +83,7 @@ int main(void)
 		int ans=0;
 		for(int i=0;i<n;i++)
 		{
-			if(num[i]>2)
+			if(num[i]>1)
 				ans++;
 		}
 		printf("%d\n",ans);
