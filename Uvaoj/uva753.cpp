@@ -60,8 +60,8 @@ struct EdmondsKarp
 	}
 	void add_edge(int from, int to, int cap)
 	{
-		edges.push_back(from, to, cap, 0);
-		edges.push_back(to, from, 0, 0);
+		edges.push_back(Edge(from, to, cap, 0));
+		edges.push_back(Edge(to, from, 0, 0));
 		m=edges.size();
 		G[from].push_back(m-2);
 		G[to].push_back(m-1);
@@ -71,14 +71,14 @@ struct EdmondsKarp
 		int flow=0;
 		while(1)
 		{
-			memset(a,0,sizeof(0));
+			memset(a,0,sizeof(a));
 			queue<int> q;
 			q.push(s);
-			a[s]=INT_MAX:
+			a[s]=INT_MAX;
 			while(!q.empty())
 			{
 				int temp=q.front();
-				q.front();
+				q.pop();
 				for(auto it:G[temp])
 				{
 					Edge e=edges[it];
@@ -94,17 +94,17 @@ struct EdmondsKarp
 			}
 			if(!a[t])
 				break;
+			for(int u = t; u != s; u=edges[p[u]].from)
+			{
+				edges[p[u]].flow+=a[t];
+				edges[p[u]^1].flow-=a[t];
+			}
+			flow+=a[t];
 		}
-		for(int u = t; u != s; u=edges[p[u]].from)
-		{
-			edges[p[u]].flow+=a[t];
-			edges[p[u]^1].flow-=a[t];
-		}
-		flow+=a[t];
+		return flow;
 	}
-	return flow;
-}
-
+};
+EdmondsKarp EK;
 int main(void)
 {
 	string input;
@@ -112,8 +112,10 @@ int main(void)
 	ios::sync_with_stdio(false);
 	int T;
 	cin>>T;
-	while(T--)
+	for(int ii=1;ii<=T;ii++)
 	{
+		if(ii!=1)
+			cout<<endl;
 		init();
 		cin>>n;
 		for(int i=0;i<n;i++)
@@ -166,7 +168,7 @@ int main(void)
 				id2=it->second;
 			a[id1][id2]=1;
 		}
-		flyod(cnt_type);
+		floyd(cnt_type);
 		EK.init(n+m+2);
 		s=m+n;
 		t=m+n+1;
@@ -177,15 +179,19 @@ int main(void)
 				int ii=i,jj=j-m;
 				int type_device=device_type[ii];
 				int type_receptacle=receptacle_type[jj];
-				if(b[type_device][type_receptacle])
+				if(a[type_device][type_receptacle])
+				{
 					EK.add_edge(i,j,1);
+				}
 			}
 		}
 		for(int i=0;i<m;i++)
 			EK.add_edge(s,i,1);
 		for(int j=m;j<m+n;j++)
 			EK.add_edge(j,t,1);
-		
+		int ans=EK.maxflow(s,t);
+		ans=m-ans;
+		cout<<ans<<endl;
 
 	}
 	return 0;
