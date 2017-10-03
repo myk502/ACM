@@ -23,6 +23,7 @@ struct Edge
 	}
 };
 vector<Edge> edges;
+queue<int> q;
 void dfs(int x)
 {
 	s.push(x);
@@ -57,6 +58,8 @@ void init(void)
 {
 	while(!s.empty())
 		s.pop();
+	while(!q.empty())
+		q.pop();
 	cnt_dfn = cnt_scc = 0;
 	for(int i = 0; i < maxn;i++)
 		G[i].clear();
@@ -69,21 +72,7 @@ void init(void)
 	edges.clear();
 	memset(a,0,sizeof(a));
 }
-void dfss(int x)
-{
-	if(dp[x] != -1)
-		return ;
-	int ans = sccnum[x];
-	for(int to = 1; to <= cnt_scc;to++)
-	{
-		if(a[x][to] == 0)
-			continue;
-		if(dp[to] == -1)
-			dfss(to);
-		ans = max(ans,sccnum[x] + dp[to]);
-	}
-	dp[x] = ans;
-}
+
 int main(void)
 {
 	int T,aa,bb;
@@ -112,8 +101,25 @@ int main(void)
 		}
 		for(int i = 1; i <= n;i++)
 			sccnum[sccno[i]]++;
-		for(int i = 1; i<= cnt_scc;i++)
-			dfss(i);
+		for(int i = 1; i <= cnt_scc;i++)
+			dp[i] = sccnum[i];
+		for(int i = 1; i <= cnt_scc;i++)
+			if(indegree[i] == 0)
+				q.push(i);
+		while(!q.empty())
+		{
+			int temp = q.front();
+			q.pop();
+			for(int to = 1; to <= cnt_scc;to++)
+			{
+				if(a[temp][to] == 0)
+					continue;
+				indegree[to]--;
+				dp[to] = max(dp[to],dp[temp] + sccnum[to]);
+				if(indegree[to] == 0)
+					q.push(to);
+			}
+		}
 		int ans = -1;
 		for(int i = 1; i <= cnt_scc;i++)
 			ans = max(ans,dp[i]);
