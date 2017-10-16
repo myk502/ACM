@@ -12,17 +12,8 @@ using namespace std;
 const int maxn = 1000 + 10;
 int n,m,cnt_dfn,cnt_scc,sccno[maxn],dfn[maxn],low[maxn],indegree[maxn],dp[maxn],sccnum[maxn];
 vector<int> G[maxn];
-int a[maxn][maxn];
+vector<int> a[maxn];
 stack<int> s;
-
-struct Edge
-{
-	int from,to;
-	Edge(int from = -1,int to = -1):from(from),to(to)
-	{
-	}
-};
-vector<Edge> edges;
 void dfs(int x)
 {
 	s.push(x);
@@ -35,19 +26,19 @@ void dfs(int x)
 			low[x] = min(low[x],low[it]);
 		}
 		else if(!sccno[it])
-			low[x] = min(low[x],dfn[it]);
+			low[x] = min(low[x],low[it]);
 	}
 	if(low[x] == dfn[x])
 	{
-		int temp;
 		cnt_scc++;
-		do
+		while(true)
 		{
-			temp = s.top();
+			int v = s.top();
 			s.pop();
-			sccno[temp] = cnt_scc;
+			sccno[v] = cnt_scc;
+			if(v == x)
+				break;
 		}
-		while(temp != x);
 	}
 }
 			
@@ -55,69 +46,60 @@ void dfs(int x)
 
 void init(void)
 {
-	while(!s.empty())
-		s.pop();
 	cnt_dfn = cnt_scc = 0;
 	for(int i = 0; i < maxn;i++)
 		G[i].clear();
-	memset(sccnum,0,sizeof(sccnum));
-	memset(dp,-1,sizeof(dp));
 	memset(sccno,0,sizeof(sccno));
 	memset(dfn,0,sizeof(dfn));
-	memset(low,0,sizeof(low));
-	memset(indegree,0,sizeof(indegree));
-	edges.clear();
-	memset(a,0,sizeof(a));
 }
-void dfss(int x)
+int dfss(int x)
 {
-	if(dp[x] != -1)
-		return ;
+	if(dp[x])
+		return dp[x];
 	int ans = sccnum[x];
-	for(int to = 1; to <= cnt_scc;to++)
-	{
-		if(a[x][to] == 0)
-			continue;
-		if(dp[to] == -1)
-			dfss(to);
-		ans = max(ans,sccnum[x] + dp[to]);
-	}
-	dp[x] = ans;
+	for(auto to:a[x])
+		ans = max(ans,sccnum[x] + dfss(to));
+	return dp[x] = ans;
 }
 int main(void)
 {
+	ios::sync_with_stdio(false);
 	int T,aa,bb;
-	scanf("%d",&T);
+	cin>>T;
 	while(T--)
 	{
 		init();
-		scanf("%d%d",&n,&m);
+		cin>>n>>m;
 		for(int i = 0; i < m;i++)
 		{
-			scanf("%d%d",&aa,&bb);
+			cin>>aa>>bb;
 			G[aa].push_back(bb);
-			edges.push_back(Edge(aa,bb));
 		}
 		for(int i = 1;i <= n;i++)
 			if(!dfn[i])
 				dfs(i);
-		for(auto it:edges)
-		{
-			int from = sccno[it.from];
-			int to = sccno[it.to];
-			if(from == to)
-				continue;
-			a[from][to] = 1;
-			indegree[to]++;
-		}
+		memset(dp,0,sizeof(dp));
+		memset(sccnum,0,sizeof(sccnum));
+		for(int i = 1; i <= cnt_scc;i++)
+			a[i].clear();
+		for(int i = 1; i <= n;i++)
+			for(auto it:G[i])
+			{
+				int from = sccno[i];
+				int to = sccno[it];
+				if(from == to)
+					continue;
+				a[from].push_back(to);
+			}
 		for(int i = 1; i <= n;i++)
 			sccnum[sccno[i]]++;
 		for(int i = 1; i<= cnt_scc;i++)
-			dfss(i);
+			if(!dp[i])
+				dfss(i);
 		int ans = -1;
 		for(int i = 1; i <= cnt_scc;i++)
 			ans = max(ans,dp[i]);
-		printf("%d\n",ans);
+		cout<<ans<<"\n";
 	}
 	return 0;
 }
