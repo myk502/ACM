@@ -1,67 +1,42 @@
-#include<stdio.h>
-#include<string.h>
-#include<algorithm>
-#include<math.h>
+#include<cstdio>
 using namespace std;
-
+char input;
+int num;
+int cas = 0;
 int main(void)
 {
-
-    char x;
-    int n,countt=0;
-    while(scanf("%c",&x))
-    {
-        if(x=='\n')
-            continue;
-        if(x=='@')
-            break;
-        scanf("%d",&n);
-        if(countt!=0)
-            printf("\n");
-        countt++;
-        for(int i=1;i<=n;i++)
-        {
-            for(int j=1;j<=2*n-1;j++)
-            {
-                if(i==1)
-                {
-                    if(j==n)
-                    {
-                        printf("%c\n",x);
-                        break;
-                    }
-                    else
-                        printf(" ");
-
-                }
-                if(i==n)
-                {
-                    printf("%c",x);
-                    if(j==2*n-1)
-                    {
-                        printf("\n");
-                        break;
-                    }
-                }
-                if((i>1)&&(i<n))
-                {
-                    if(j==n+1-i)
-                        putchar(x);
-                    else
-                    {
-                        if(j==i+n-1)
-                        {
-                            printf("%c\n",x);
-                            break;
-                        }
-                        else
-                            printf(" ");
-                    }
-                }
-            }
-            //printf("\n");
-        }
-
-    }
-    return 0;
+	while(scanf("%c", &input) != EOF)//keep reading character 
+	{
+		if(input == ' ' || input == '\n')//if we have read a blank character, continue
+			continue;
+		if(input == '@')//@ means the end of input
+			break;
+		if(cas == 0)//This statement is for the separation lines between cases(because if we just print an empty line after each case
+		//we will get a Presentation Error
+			cas++;
+		else
+			printf("\n");
+		scanf("%d", &num);
+		for(int i = 1; i < num; i++)
+			printf(" ");
+		printf("%c\n", input);//The first row
+		int num_space = 1;
+		for(int i = num - 2; i > 0; i--)//The second till the last but one row
+		{
+			for(int j = 0; j < i; j++)
+				printf(" ");
+			printf("%c", input);
+			for(int j = 0; j < num_space; j++)
+				printf(" ");
+			printf("%c\n", input);
+			num_space += 2;
+		}
+		if(num > 1)//The last row
+		{
+			for(int i = 0; i < 2 * num - 1; i++)
+				printf("%c",input);
+			printf("\n");
+		}
+	}
+	return 0;
 }
