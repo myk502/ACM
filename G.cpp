@@ -1,76 +1,93 @@
-#include<cstdio>
-#include<iostream>
-#include<cmath>
-#include<cstring>
-#include<algorithm>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <climits>
+#include <cfloat>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <iomanip>
 using namespace std;
-struct Node
-{
-	int x,y;
-	Node(int x = 0,int y = 0):x(x),y(y)
-	{
-	}
+
+#define LL long long
+const int maxn = 2000 + 100;
+struct Node {
+    int l, r;
 };
-Node A,B,C,D;
-bool mysolve(Node a,Node b,Node c)
-{
-	if(a.x == b.x && (a.y + b.y == c.x || a.y + b.y == c.y))
-		return true;
-	if(a.x == b.y && (a.y + b.x == c.x || a.y + b.x == c.y))
-		return true;
-	if(a.y == b.x && (a.x + b.y == c.x || a.x + b.y == c.y))
-		return true;
-	if(a.y == b.y && (a.x + b.x == c.x || a.x + b.x == c.y))
-		return true;
-	return false;
+bool operator<(const Node &a, const Node &b) {
+    if(a.l == b.l) {
+        return a.r < b.r;
+    }
+    return a.l < b.l;
 }
-bool solve(Node a,Node b,Node c)
-{
-	int cnt[1010];
-	memset(cnt,0,sizeof(cnt));
-	if(a.x != a.y)
-	{
-		cnt[a.x]++;
-		cnt[a.y]++;
-	}
-	else
-		cnt[a.x]++;
-	if(b.x != b.y)
-	{
-		cnt[b.x]++;
-		cnt[b.y]++;
-	}
-	else
-		cnt[b.x]++;
-	if(c.x != c.y)
-	{
-		cnt[c.x]++;
-		cnt[c.y]++;
-	}
-	else
-		cnt[c.x]++;
-	for(int i = 1; i <= 1000;i++)
-		if(cnt[i] >= 3)
-			return true;
-	if(mysolve(a,b,c) || mysolve(a,c,b) || mysolve(b,c,a))
-		return true;
-	return false;
-}
-int main(void)
-{
-	int T;
-	scanf("%d",&T);
-	bool flag;
-	while(T--)
-	{
-		scanf("%d%d%d%d%d%d%d%d",&A.x,&A.y,&B.x,&B.y,&C.x,&C.y,&D.x,&D.y);
-		flag = false;
-		if(solve(A,B,C) || solve(A,B,D) || solve(A,C,D) || solve(B,C,D))
-			flag = true;
-		if(flag)
-			printf("Yes\n");
-		else
-			printf("No\n");
-	}
-	return 0;
+int T, n, m, k, x, rr;
+Node node[maxn];
+int dpr[maxn][maxn];
+int dp[maxn][maxn];
+
+int main() {
+    #ifdef LOCAL
+    freopen("test.txt", "r", stdin);
+//    freopen("out.txt", "w", stdout);
+    #endif // LOCAL
+//    ios::sync_with_stdio(false);
+
+
+    scanf("%d", &T);
+    int cas = 0;
+    while(T--) {
+        printf("Case #%d: ", ++cas);
+        scanf("%d%d%d", &n, &m, &k);
+        for(int i = 1; i <= m; ++i) {
+            scanf("%d%d", &node[i].l, &node[i].r);
+        }
+        for(int i = 0; i <= m; ++i) {
+            for(int j = 0; j <= k; ++j) {
+                dp[i][j] = dpr[i][j] = 0;
+            }
+        }
+        sort(node + 1, node + m + 1);
+        for(int i = 1; i <= m; ++i) {
+            for(int j = 1; j <= k; ++j) {
+                if(node[i].l <= dpr[i - 1][j - 1]) {
+                    if(node[i].r <= dpr[i - 1][j - 1]) {
+                        x = 0;
+                        rr = dpr[i - 1][j - 1];
+                    } else {
+                        x = node[i].r - dpr[i - 1][j - 1];
+                        rr = node[i].r;
+                    }
+                } else {
+                    x = node[i].r - node[i].l + 1;
+                    rr = node[i].r;
+                }
+                if(dp[i - 1][j] > dp[i - 1][j - 1] + x) {
+                    dp[i][j] = dp[i - 1][j];
+                    dpr[i][j] = dpr[i - 1][j];
+                } else if(dp[i - 1][j] == dp[i - 1][j - 1] + x) {
+                    dp[i][j] = dp[i - 1][j];
+                    dpr[i][j] = min(dpr[i - 1][j], rr);
+                } else {
+                    dp[i][j] = dp[i - 1][j - 1] + x;
+                    dpr[i][j] = rr;
+                }
+//                printf("x = %d\n", x);
+//                printf("dp[%d][%d] = %d\n", i, j, dp[i][j]);
+//                printf("dpr[%d][%d] = %d\n", i, j, dpr[i][j]);
+            }
+        }
+        printf("%d\n", dp[m][k]);
+    }
+
+    return 0;
 }
